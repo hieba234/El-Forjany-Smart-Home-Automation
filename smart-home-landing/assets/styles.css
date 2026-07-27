@@ -1,0 +1,463 @@
+/*
+  FILE: assets/styles.css
+  PURPOSE: This single stylesheet controls the look of all three language pages.
+
+  HOW TO EDIT SAFELY:
+  - Change brand colors in :root first. Most of the site uses those variables.
+  - Keep the dark, premium look by using deep navy backgrounds with warm gold accents.
+  - If something looks too big/small, search for its class name from the HTML and edit it here.
+  - Arabic RTL fixes use body[dir="rtl"] selectors. Do not remove them.
+  - Mobile layout is at the bottom inside @media rules.
+*/
+
+/* -----------------------------
+   1) Brand design tokens
+   -----------------------------
+   These variables are reused everywhere.
+   Change these to rebrand the entire site quickly.
+*/
+:root{
+  /* Main dark background. Change carefully; this controls the premium tech feeling. */
+  --bg:#050a12;
+
+  /* Secondary background used in gradients. */
+  --bg2:#071827;
+
+  /* Transparent glass card colors. */
+  --card:rgba(255,255,255,.08);
+  --card2:rgba(255,255,255,.12);
+
+  /* Main text and soft paragraph text. */
+  --text:#f5fbff;
+  --muted:#a9bed0;
+
+  /* Thin border line used around cards/buttons. */
+  --line:rgba(255,255,255,.16);
+
+  /* Brand accent colors, sampled from the El Forjany Automation logo. Gold is the primary accent
+     (buttons, links, icons, focus rings); navy-accent is the secondary accent (borders, glows,
+     paired gradients); navy-deep is used as dark text sitting on top of a gold background. */
+  --gold:#f1ad4c;
+  --gold-light:#f8cb80;
+  --navy-accent:#2f6c99;
+  --navy-deep:#163c59;
+
+  /* Reserved warning/accent color if needed later. */
+  --danger:#ff4d8d;
+
+  /* Reusable shadow and radius values. */
+  --shadow:0 24px 90px rgba(0,0,0,.45);
+  --shadow-lg:0 30px 110px rgba(0,0,0,.55);
+  --radius:28px;
+
+  /* Maximum content width. Increase only if the page feels too narrow on large screens. */
+  --max:1180px;
+
+  /* Typography: a characterful display face for headings/logo, Inter for body copy. Loaded via Google Fonts in <head>. */
+  --font-display:'Sora', var(--font-body);
+  --font-body:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Shared easing curve for premium, non-linear motion. */
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* Makes width calculations predictable for all elements. */
+*{box-sizing:border-box}
+
+/* Smooth scrolling when clicking header links like #services or #contact. */
+html{scroll-behavior:smooth}
+
+/* Global page body: font, text color, and dark animated-feeling background. */
+body{
+  margin:0;
+  font-family:var(--font-body);
+  color:var(--text);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(241,173,76,.22), transparent 32%),
+    radial-gradient(circle at 80% 20%, rgba(47,108,153,.14), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--bg2) 50%, #02040a);
+  overflow-x:hidden;
+}
+
+/* Arabic page font fallback. Add a real Arabic web font later if desired. */
+body[dir="rtl"]{font-family:"Cairo", Tahoma, Arial, sans-serif}
+body[dir="rtl"] h1, body[dir="rtl"] h2, body[dir="rtl"] .section-title, body[dir="rtl"] .logo-text{font-family:"Cairo", Tahoma, Arial, sans-serif}
+
+/* Headings use the display face so the page reads like a considered brand system, not a default body-font stack. */
+h1, h2, h3, .section-title, .logo-text{font-family:var(--font-display)}
+
+/* Default link and image behavior. */
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* Visible keyboard focus. Kept even though the palette is dark, so tab-only navigation stays usable. */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:3px;
+  border-radius:8px;
+}
+
+/* Reusable content container used by every section. */
+.container{
+  width:min(var(--max), calc(100% - 36px));
+  margin-inline:auto;
+}
+
+/* -----------------------------
+   2) Decorative background glow
+   -----------------------------
+   These are the floating neon blobs behind the content.
+   They are purely visual and can be removed for a simpler/faster site.
+*/
+.glow-orb{
+  position:fixed;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  filter:blur(90px);
+  opacity:.16;
+  z-index:-1;
+  pointer-events:none;
+  background:var(--gold);
+  animation:float 12s ease-in-out infinite alternate;
+}
+.glow-orb.one{left:-120px;top:8%}
+.glow-orb.two{right:-120px;top:42%;background:var(--navy-accent);animation-delay:-4s}
+@keyframes float{to{transform:translate3d(50px,80px,0) scale(1.12)}}
+
+/* -----------------------------
+   3) Header and navigation
+   -----------------------------
+   Sticky header stays visible while scrolling.
+*/
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  backdrop-filter:blur(22px);
+  background:rgba(4,10,18,.72);
+  border-bottom:1px solid var(--line);
+}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+
+/* Logo container: holds the real El Forjany Automation icon mark (assets/logo-mark.png, transparent PNG).
+   Height is fixed, width is flexible, and object-fit:contain guarantees the file is never stretched,
+   cropped, or distorted at any screen size — swap the file any time without touching this CSS. */
+.logo{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.2px;transition:opacity .25s var(--ease)}
+.logo:hover{opacity:.9}
+.logo-mark{
+  height:42px;
+  width:auto;
+  min-width:32px;
+  max-width:170px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  transition:transform .3s var(--ease);
+}
+.logo:hover .logo-mark{transform:translateY(-1px) scale(1.03)}
+.logo-mark img{height:100%;width:auto;max-width:100%;object-fit:contain;display:block;filter:drop-shadow(0 4px 16px rgba(0,0,0,.4))}
+.logo-mark svg{width:100%;height:100%;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.logo-text{font-size:1.06rem;font-weight:800;letter-spacing:-.01em}
+.nav-links{display:flex;align-items:center;gap:22px;color:var(--muted);font-size:.95rem}
+.nav-links a:hover{color:var(--text)}
+.lang-switch{display:flex;align-items:center;gap:7px;padding:8px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.05)}
+.lang-switch a{font-size:.82rem;color:var(--muted);padding:6px 9px;border-radius:999px}
+.lang-switch a.active{background:rgba(241,173,76,.18);color:var(--text)}
+.nav-cta{padding:12px 16px;border-radius:999px;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#163c59;font-weight:900;box-shadow:0 0 30px rgba(241,173,76,.28)}
+.mobile-menu{display:none;background:transparent;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:9px 11px}
+
+/* -----------------------------
+   4) Hero section
+   -----------------------------
+   This is the most important conversion area.
+   Edit the background image URL here if you want a different hero image.
+*/
+.hero{position:relative;min-height:calc(100vh - 76px);display:flex;align-items:center;padding:88px 0 68px;overflow:hidden}
+
+/* Rotating hero background. Photos live in the .hero-slider container as real <img> tags (see HTML)
+   so each keeps its own alt text for accessibility/SEO; assets/script.js crossfades .active between them. */
+.hero-slider{position:absolute;inset:0;z-index:-3;overflow:hidden;background:var(--bg)}
+.hero-slide{position:absolute;inset:0;opacity:0;transform:scale(1.1);transition:opacity 1.8s var(--ease), transform 7s linear}
+.hero-slide.active{opacity:1;transform:scale(1)}
+.hero-slide img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Dark gradient overlay. Sits above the photos so hero text stays easy to read on every slide. */
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(5,10,18,.97) 0%, rgba(5,10,18,.78) 46%, rgba(5,10,18,.5) 78%, rgba(5,10,18,.68) 100%);z-index:-2}
+.hero:after{content:"";position:absolute;inset:auto -20% -30% -20%;height:340px;background:radial-gradient(ellipse, rgba(241,173,76,.18), transparent 65%);z-index:-1}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:50px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(241,173,76,.36);background:rgba(241,173,76,.09);color:#f8e2b8;border-radius:999px;padding:10px 14px;font-weight:800;font-size:.88rem}
+.pulse-dot{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(241,173,76,.85);animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 14px rgba(241,173,76,0)}}
+h1{font-size:clamp(2.55rem,6vw,5.65rem);line-height:.94;margin:24px 0 20px;letter-spacing:-.07em}
+.gradient-text{background:linear-gradient(135deg,var(--text),var(--gold) 45%,var(--gold-light));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(1.05rem,2vw,1.28rem);line-height:1.75;color:#d8e8f4;max-width:720px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+.btn{border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:15px 22px;font-weight:900;transition:.3s transform var(--ease),.3s box-shadow,.3s background;position:relative;overflow:hidden}
+.btn:hover{transform:translateY(-3px)}
+.btn:disabled{opacity:.6;cursor:default;transform:none}
+.btn:disabled:hover{transform:none}
+.btn:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-130%);transition:transform .7s var(--ease)}
+.btn:hover:before{transform:translateX(130%)}
+.btn-primary{background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#163c59;box-shadow:0 18px 48px rgba(241,173,76,.28)}
+.btn-secondary{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--line)}
+.btn-full{width:100%}
+.trust-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.trust-pill{padding:10px 13px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.06);color:#dbefff;font-size:.9rem}
+
+/* Smart phone/dashboard visual in hero. */
+.hero-panel{position:relative;border:1px solid rgba(255,255,255,.2);border-radius:36px;background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.045));box-shadow:var(--shadow);overflow:hidden;min-height:560px;padding:24px;backdrop-filter:blur(20px)}
+.phone-card{width:min(360px,100%);margin-inline:auto;border-radius:36px;border:1px solid rgba(255,255,255,.25);background:#07111c;box-shadow:0 30px 80px rgba(0,0,0,.6);padding:18px;position:relative;z-index:2}
+.phone-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.82rem}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.status-card{background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.05));border:1px solid var(--line);border-radius:22px;padding:16px;min-height:116px}
+.status-card b{display:block;font-size:1.7rem;margin-top:16px}
+.device-line{height:6px;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--navy-accent));margin-top:14px;box-shadow:0 0 22px rgba(241,173,76,.55)}
+.scene-card{margin-top:14px;padding:18px;border-radius:24px;background:radial-gradient(circle at 20% 20%,rgba(241,173,76,.22),transparent 34%),rgba(255,255,255,.08);border:1px solid var(--line)}
+.scene-toggle{display:flex;justify-content:space-between;gap:15px;margin-top:18px}
+.switch{width:56px;height:32px;border-radius:999px;background:linear-gradient(135deg,var(--gold-light),var(--gold));position:relative}
+.switch:after{content:"";width:24px;height:24px;border-radius:50%;background:#163c59;position:absolute;right:4px;top:4px;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+body[dir="rtl"] .switch:after{right:auto;left:4px}
+.floating-device{position:absolute;border:1px solid var(--line);border-radius:22px;padding:13px 16px;background:rgba(5,10,18,.66);backdrop-filter:blur(16px);box-shadow:0 18px 60px rgba(0,0,0,.35);animation:bob 4.5s ease-in-out infinite}
+.floating-device.one{right:22px;top:96px}
+.floating-device.two{left:18px;top:260px;animation-delay:-1.5s}
+.floating-device.three{right:48px;bottom:72px;animation-delay:-2.3s}
+@keyframes bob{50%{transform:translateY(-16px)}}
+
+/* -----------------------------
+   5) Shared section typography
+   -----------------------------
+*/
+section{padding:96px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:34px}
+.section-kicker{color:var(--gold);font-weight:900;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+.section-title{font-size:clamp(2rem,4.2vw,3.6rem);line-height:1.02;letter-spacing:-.05em;margin:10px 0 0}
+.section-copy{color:var(--muted);font-size:1.04rem;line-height:1.7;max-width:630px}
+
+/* -----------------------------
+   6) Services and process cards
+   -----------------------------
+*/
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.service-card,.package-card,.faq-item,.form-card,.video-card,.project-card{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.045));border-radius:var(--radius);box-shadow:0 16px 60px rgba(0,0,0,.2);backdrop-filter:blur(18px)}
+.service-card{padding:24px;min-height:235px;position:relative;overflow:hidden;transition:.35s transform var(--ease),.35s border-color,.35s box-shadow}
+.service-card:hover{transform:translateY(-8px);border-color:rgba(241,173,76,.52);box-shadow:0 26px 80px rgba(0,0,0,.32)}
+.service-card:after{content:"";position:absolute;inset:auto -50px -60px auto;width:150px;height:150px;border-radius:50%;background:rgba(241,173,76,.13);filter:blur(12px)}
+
+/* Icon badge: holds a crisp inline SVG (stroke-based, 24x24) instead of an emoji glyph, so every
+   service reads as a considered brand mark rather than a platform-dependent emoji font. */
+.icon{width:56px;height:56px;border-radius:16px;margin-bottom:28px;background:linear-gradient(135deg,rgba(241,173,76,.18),rgba(47,108,153,.12));border:1px solid rgba(241,173,76,.28);display:grid;place-items:center;color:var(--gold);transition:.35s background var(--ease),.35s transform var(--ease)}
+.icon svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.service-card:hover .icon{background:linear-gradient(135deg,rgba(241,173,76,.32),rgba(47,108,153,.22));transform:translateY(-2px) scale(1.04)}
+
+.service-card h3,.package-card h3{font-size:1.25rem;margin:0 0 12px}
+.service-card p,.package-card p,.faq-item p{color:var(--muted);line-height:1.62;margin:0}
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:step}
+.step{padding:25px;border-radius:var(--radius);border:1px solid var(--line);background:rgba(255,255,255,.055);position:relative;transition:.35s transform var(--ease),.35s border-color}
+.step:hover{transform:translateY(-6px);border-color:rgba(241,173,76,.4)}
+.step:before{counter-increment:step;content:counter(step);width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#163c59;font-weight:1000;margin-bottom:24px}
+.step p{color:var(--muted);line-height:1.6}
+
+/* -----------------------------
+   7) Smart home configurator
+   -----------------------------
+   The buttons are in HTML. The results are rendered by assets/script.js.
+*/
+.configurator{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:start}
+.filter-panel{position:sticky;top:96px;border:1px solid var(--line);background:rgba(255,255,255,.07);border-radius:var(--radius);padding:22px}
+.filter-buttons{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.07);color:var(--text);padding:11px 13px;border-radius:999px;cursor:pointer;font-weight:800}
+.chip.active{background:linear-gradient(135deg,rgba(241,173,76,.24),rgba(47,108,153,.18));border-color:rgba(241,173,76,.5)}
+.result-panel{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.055));border-radius:var(--radius);padding:26px}
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:22px 0}
+.mini-card{border:1px solid var(--line);background:rgba(255,255,255,.055);border-radius:22px;padding:18px}
+.mini-card strong{display:block;margin-bottom:8px}
+.estimate{margin-top:18px;border-radius:22px;padding:18px;background:linear-gradient(135deg,rgba(241,173,76,.14),rgba(47,108,153,.1));border:1px solid rgba(241,173,76,.25)}
+
+/* -----------------------------
+   8) Visual images and video area
+   -----------------------------
+*/
+.visual-strip{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:18px;align-items:stretch}
+.visual-tile{border-radius:32px;min-height:390px;overflow:hidden;border:1px solid var(--line);position:relative;background:#06101b}
+.visual-tile img{width:100%;height:100%;object-fit:cover;opacity:.82;transition:1s transform}
+.visual-tile:hover img{transform:scale(1.08)}
+.visual-tile:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.55),transparent 60%)}
+.visual-label{position:absolute;left:22px;right:22px;bottom:22px;z-index:2;font-weight:900}
+.visual-tile.big{min-height:470px}
+.scan-line{position:absolute;left:0;right:0;height:2px;top:0;background:var(--gold);box-shadow:0 0 22px var(--gold);animation:scan 4s linear infinite;z-index:3}
+@keyframes scan{to{top:100%}}
+.video-card{padding:24px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+.video-frame{aspect-ratio:16/9;border-radius:26px;border:1px solid rgba(241,173,76,.35);background:radial-gradient(circle at 50% 35%,rgba(241,173,76,.22),transparent 36%),linear-gradient(135deg,#081521,#02050a);display:grid;place-items:center;position:relative;overflow:hidden}
+.video-frame:before{content:"";position:absolute;inset:20%;border:1px solid rgba(255,255,255,.12);border-radius:30px;animation:videoPulse 2.6s infinite}
+.play{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#163c59;font-size:2.3rem;box-shadow:0 0 40px rgba(241,173,76,.45);z-index:2}
+@keyframes videoPulse{50%{transform:scale(1.12);opacity:.35}}
+
+/* -----------------------------
+   9) Packages, projects, FAQ
+   -----------------------------
+*/
+.packages{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.package-card{padding:24px;position:relative;overflow:hidden;transition:.35s transform var(--ease),.35s border-color,.35s box-shadow}
+.package-card:hover{transform:translateY(-6px);border-color:rgba(241,173,76,.42);box-shadow:0 26px 80px rgba(0,0,0,.3)}
+.price{font-size:1.8rem;font-weight:1000;margin:20px 0 8px}
+.package-card ul{list-style:none;padding:0;margin:18px 0 0;color:var(--muted);line-height:1.9}
+.package-card li:before{content:"✓";color:var(--gold);font-weight:900;margin-inline-end:9px}
+.featured{border-color:rgba(241,173,76,.58);box-shadow:0 24px 90px rgba(241,173,76,.14)}
+.badge{position:absolute;top:18px;right:18px;padding:7px 10px;border-radius:999px;background:rgba(241,173,76,.16);color:#f8e2b8;font-size:.76rem;font-weight:900}
+body[dir="rtl"] .badge{right:auto;left:18px}
+.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.project-card{overflow:hidden;transition:.35s transform var(--ease),.35s box-shadow}
+.project-card:hover{transform:translateY(-6px);box-shadow:0 26px 80px rgba(0,0,0,.35)}
+.project-card img{width:100%;height:250px;object-fit:cover;opacity:.86;transition:.5s transform var(--ease),.3s opacity}
+.project-card:hover img{transform:scale(1.05);opacity:1}
+.project-card div{padding:20px}
+.project-card p{color:var(--muted);line-height:1.55}
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{padding:22px;transition:.3s border-color,.3s transform var(--ease)}
+.faq-item:hover{border-color:rgba(241,173,76,.36);transform:translateY(-3px)}
+.faq-item h3{margin:0 0 10px;font-size:1.08rem}
+
+/* -----------------------------
+   10) Contact form and footer
+   -----------------------------
+*/
+.contact-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:28px}
+.contact-list{display:grid;gap:14px;margin-top:28px}
+.contact-method{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:22px;padding:18px;transition:.3s border-color,.3s transform var(--ease)}
+.contact-method:hover{border-color:rgba(241,173,76,.36);transform:translateY(-3px)}
+.form-card{padding:26px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:grid;gap:8px}
+.field.full{grid-column:1/-1}
+label{color:#dcefff;font-weight:800;font-size:.9rem}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:16px;background:rgba(1,8,14,.72);color:var(--text);padding:14px 15px;font:inherit;outline:none}
+textarea{min-height:132px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:rgba(241,173,76,.7);box-shadow:0 0 0 4px rgba(241,173,76,.12)}
+/* Custom dropdown arrow so <select> matches the rest of the premium dark UI instead of the browser default. */
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23a9bed0' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 7.5 10 12.5 15 7.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-inline-end:38px}
+body[dir="rtl"] select{background-position:left 14px center}
+select option{background:#0b1622;color:var(--text)}
+.fine-print{color:var(--muted);font-size:.86rem;line-height:1.55;margin-top:12px}
+/* Success panel shown after the lead form submits; hidden by default via the HTML "hidden" attribute. */
+.form-success{padding:44px 30px;text-align:center}
+.form-success h3{margin:0 0 12px;font-size:1.6rem}
+.form-success p{color:var(--muted);line-height:1.6;margin:0 0 22px}
+/* Inline error note shown if the submit fails or the Google Form ids are not configured yet. */
+.form-error-note{color:#ff9fc0;font-size:.9rem;line-height:1.55;margin-top:14px}
+.footer{padding:36px 0;border-top:1px solid var(--line);background:rgba(0,0,0,.18)}
+.footer-grid{display:flex;align-items:center;justify-content:space-between;gap:18px;color:var(--muted);font-size:.95rem}
+
+/* -----------------------------
+   11d) Floating WhatsApp button
+   -----------------------------
+   Fixed to the bottom-left corner on every page so a visitor can start a chat from anywhere,
+   not just from the contact section. Kept in WhatsApp's own green so it stays instantly
+   recognizable regardless of the site's own navy/gold palette.
+*/
+.whatsapp-float{
+  position:fixed;
+  left:22px;
+  bottom:22px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:#25d366;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 12px 34px rgba(0,0,0,.45);
+  z-index:500;
+  animation:wa-pulse 2.6s infinite;
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.whatsapp-float:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 16px 44px rgba(0,0,0,.5)}
+.whatsapp-float svg{width:30px;height:30px}
+@keyframes wa-pulse{
+  0%{box-shadow:0 12px 34px rgba(0,0,0,.45),0 0 0 0 rgba(37,211,102,.55)}
+  70%{box-shadow:0 12px 34px rgba(0,0,0,.45),0 0 0 16px rgba(37,211,102,0)}
+  100%{box-shadow:0 12px 34px rgba(0,0,0,.45),0 0 0 0 rgba(37,211,102,0)}
+}
+@media(max-width:650px){
+  .whatsapp-float{width:52px;height:52px;left:16px;bottom:16px}
+  .whatsapp-float svg{width:26px;height:26px}
+}
+
+/* -----------------------------
+   11) Scroll reveal animation
+   -----------------------------
+   JavaScript adds .visible when a section enters the screen.
+*/
+.reveal{opacity:0;transform:translateY(26px);transition:.75s var(--ease)}
+.reveal.visible{opacity:1;transform:none}
+
+/* -----------------------------
+   11b) Tactile grain overlay
+   -----------------------------
+   A near-invisible noise layer over the whole page. Purely decorative texture that keeps large
+   dark gradients from looking flat/banded on big screens. Safe to delete for a simpler/faster site.
+*/
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  pointer-events:none;
+  opacity:.03;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* -----------------------------
+   11c) Reduced motion
+   -----------------------------
+   Respects the visitor's OS-level "reduce motion" setting: stops decorative animation
+   without hiding any content.
+*/
+@media (prefers-reduced-motion: reduce){
+  .reveal{transition:none;opacity:1;transform:none}
+  .glow-orb{animation:none}
+  .hero-slide{transition:opacity .5s ease;transform:none!important}
+  .pulse-dot,.floating-device,.scan-line,.video-frame:before{animation:none}
+  .whatsapp-float{animation:none}
+  .btn:before{display:none}
+}
+
+/* -----------------------------
+   12) Tablet layout
+   -----------------------------
+   Anything below 1020px becomes simpler: one-column hero, hidden desktop menu, etc.
+*/
+@media(max-width:1020px){
+  .hero-grid,.configurator,.video-card,.contact-grid{grid-template-columns:1fr}
+  .cards,.process,.packages{grid-template-columns:repeat(2,1fr)}
+  .projects{grid-template-columns:1fr 1fr}
+  .hero-panel{min-height:500px}
+  .filter-panel{position:relative;top:0}
+  .section-head{display:block}
+  .nav-links{display:none}
+  .mobile-menu{display:block}
+  .nav-links.open{position:absolute;left:18px;right:18px;top:84px;display:grid;padding:18px;border:1px solid var(--line);border-radius:22px;background:rgba(4,10,18,.96)}
+}
+
+/* -----------------------------
+   13) Phone layout
+   -----------------------------
+   This keeps the site usable and fast on mobile.
+*/
+@media(max-width:650px){
+  .container{width:min(100% - 24px,var(--max))}
+  .hero{padding-top:54px}
+  .hero-actions .btn{width:100%}
+  .cards,.process,.packages,.projects,.faq,.result-grid,.form-grid,.visual-strip{grid-template-columns:1fr}
+  .visual-tile,.visual-tile.big{min-height:300px}
+  .hero-panel{min-height:470px;padding:14px}
+  .floating-device{display:none}
+  .phone-card{border-radius:28px}
+  .footer-grid{display:grid}
+  .lang-switch{gap:2px}
+  .nav-cta{display:none}
+  .logo-mark{height:36px;max-width:110px}
+}
+

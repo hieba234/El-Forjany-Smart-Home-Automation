@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FILE: sitemap.xml
+  PURPOSE: Gives Google a clean list of all important pages.
+  CHANGE BEFORE LAUNCH: Replace every https://elforjanysmarthome.com URL with the real domain.
+  HREFLANG: The xhtml:link rows tell Google which language versions belong together.
+  AFTER LAUNCH: Submit this exact file in Google Search Console as https://yourdomain.com/sitemap.xml.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- English page URL and its alternate language versions. -->
+  <url>
+    <loc>https://elforjanysmarthome.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elforjanysmarthome.com/en/" />
+    <xhtml:link rel="alternate" hreflang="ar-EG" href="https://elforjanysmarthome.com/ar-eg/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://elforjanysmarthome.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elforjanysmarthome.com/en/" />
+  </url>
+  <!-- Egyptian Arabic page URL and its alternate language versions. -->
+  <url>
+    <loc>https://elforjanysmarthome.com/ar-eg/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elforjanysmarthome.com/en/" />
+    <xhtml:link rel="alternate" hreflang="ar-EG" href="https://elforjanysmarthome.com/ar-eg/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://elforjanysmarthome.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elforjanysmarthome.com/en/" />
+  </url>
+  <!-- Russian page URL and its alternate language versions. -->
+  <url>
+    <loc>https://elforjanysmarthome.com/ru/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elforjanysmarthome.com/en/" />
+    <xhtml:link rel="alternate" hreflang="ar-EG" href="https://elforjanysmarthome.com/ar-eg/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://elforjanysmarthome.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elforjanysmarthome.com/en/" />
+  </url>
+</urlset>
+
