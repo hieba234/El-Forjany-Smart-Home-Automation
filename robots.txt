@@ -1,7 +1,0 @@
-# FILE: robots.txt
-# PURPOSE: Tells search engine crawlers they are allowed to crawl the site.
-# CHANGE BEFORE LAUNCH: Replace https://elforjanysmarthome.com/sitemap.xml with the real domain sitemap URL.
-User-agent: *
-Allow: /
-Sitemap: https://elforjanysmarthome.com/sitemap.xml
-
