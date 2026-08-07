@@ -1,0 +1,29 @@
+<!doctype html>
+<!--
+  FILE: index.html
+  PURPOSE: This is the root entry page for visitors who open the domain without /en/, /ar-eg/, or /ru/.
+  HOW IT WORKS: It redirects visitors to /en/ by default, while still showing manual language links if redirect fails.
+  CHANGE: Replace https://elforjanysmarthome.com/en/ with your real English URL after buying the domain.
+-->
+<html lang="ar-EG">
+<head>
+  <!-- Character encoding for multilingual text. -->
+  <meta charset="utf-8">
+  <!-- Makes the simple language fallback page responsive on phones. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Basic title for the root redirect page. The language pages have the real SEO titles. -->
+  <title>El Forjany Automation</title>
+  <!-- Favicon, matches the language pages. -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <!-- Redirects immediately to the Arabic version. -->
+  <meta http-equiv="refresh" content="0; url=ar-eg/ar-eg.html">
+  <!-- Canonical says the default version is Arabic. Replace elforjanysmarthome.com with the real domain. -->
+  <link rel="canonical" href="https://elforjanysmarthome.com/ar-eg/">
+</head>
+<body>
+  <!-- Manual language links for users/search engines if automatic redirect does not happen. -->
+  <p><a href="ar-eg/ar-eg.html">العربية</a> · <a href="en/en.html">English</a></p>
+</body>
+</html>
+
