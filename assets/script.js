@@ -350,17 +350,12 @@ if(leadForm){
       submitBtn.textContent = 'Sending...';
     }
 
-    const payload = new FormData(leadForm);
-    fetch(leadForm.action, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: payload
-    }).finally(() => {
-      setTimeout(() => {
-        leadForm.hidden = true;
-        if(successPanel) successPanel.hidden = false;
-      }, 900);
-    });
+    // Let the browser submit the native form into the hidden iframe.
+    // This is the most reliable way to post to Google Forms from a custom-styled page.
+    setTimeout(() => {
+      leadForm.hidden = true;
+      if(successPanel) successPanel.hidden = false;
+    }, 900);
   });
 }
 
