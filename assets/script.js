@@ -54,13 +54,13 @@ const copy = {
       security: {
         title:'Security setup',
         devices:['Smart cameras','Smart lock','Motion sensors','Door/window sensors'],
-        estimate:'Custom quote after the free visit. Typical starter security setups begin custom quote depending on devices and wiring.',
+        estimate:'Custom quote after the free visit. A starter security setup usually begins around 8,500 EGP, depending on the devices and the wiring.',
         checks:'Camera angles, entrance points, Wi-Fi strength, storage needs, family access.'
       },
       lighting: {
         title:'Smart lighting',
         devices:['Smart switches','Dimmable bulbs','Scene control','Motion-triggered lighting'],
-        estimate:'Custom quote after the free visit. Starter lighting automation can begin custom quote depending on room count.',
+        estimate:'Custom quote after the free visit. Lighting automation usually starts around 4,500 EGP, depending on how many rooms you want to cover.',
         checks:'Switch type, neutral wire availability, room scenes, app/voice control needs.'
       },
       comfort: {
@@ -309,9 +309,41 @@ renderConfig('full');
    iframe target is cross-origin, the page can never read back a real success/failure response from
    Google — this optimistic "assume it worked" delay is the standard, widely-used approach for this
    pattern. Always confirm with a real test submission that it appears in the form's Responses tab.
+
+   IMPORTANT: every language page must use the SAME entry ids and the SAME option values as the
+   connected Google Form, otherwise Google silently drops those answers and the row arrives blank.
+   The check below runs on every page load (including the English one) and compares each field's
+   name against the list of ids the form really accepts, so a mismatched page reports itself in the
+   browser console instead of quietly losing leads. It only logs — it never blocks a submission.
 */
+const EXPECTED_ENTRY_IDS = {
+  email: 'emailAddress',
+  name: 'entry.2025724081',
+  phone: 'entry.561299016',
+  area: 'entry.359387662',
+  place: 'entry.1574341886',
+  language: 'entry.18616109',
+  visit: 'entry.965666495',
+  needs: 'entry.1315658793'
+};
+
+function checkLeadFormSetup(){
+  const fields = {'f-email':EXPECTED_ENTRY_IDS.email, 'f-name':EXPECTED_ENTRY_IDS.name,
+                  'f-phone':EXPECTED_ENTRY_IDS.phone, 'f-area':EXPECTED_ENTRY_IDS.area,
+                  'f-place':EXPECTED_ENTRY_IDS.place, 'f-lang':EXPECTED_ENTRY_IDS.language,
+                  'f-need':EXPECTED_ENTRY_IDS.needs};
+  Object.keys(fields).forEach(id => {
+    const el = qs('#'+id);
+    if(el && el.name !== fields[id]){
+      console.warn('Lead form field "' + id + '" posts to "' + el.name + '" but the Google Form expects "' + fields[id] + '". Fix the name attribute on this page.');
+    }
+  });
+}
+
 const leadForm = qs('#lead-form');
 if(leadForm){
+  checkLeadFormSetup();
+
   const successPanel = qs('#lead-form-success');
   const submitBtn = leadForm.querySelector('button[type="submit"]');
   const visitEl = qs('#f-visit');
@@ -345,16 +377,50 @@ if(leadForm){
       }
     }
 
+    // Remember a few things about this visitor, because resetting the form below wipes them out.
+    const sentName = (qs('#f-name') || {}).value || '';
+    const sentNeeds = (qs('#f-need') || {}).value || '';
+
     if(submitBtn){
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
+      submitBtn.textContent = langKey === 'ar' ? 'جارٍ الإرسال...' : 'Sending...';
     }
 
     // Let the browser submit the native form into the hidden iframe.
     // This is the most reliable way to post to Google Forms from a custom-styled page.
     setTimeout(() => {
-      leadForm.hidden = true;
-      if(successPanel) successPanel.hidden = false;
+      // Clear the live form right away so nobody sends the same request twice by accident,
+      // and put the button back the way it was in case the visitor scrolls back down to it.
+      leadForm.reset();
+      if(submitBtn){
+        submitBtn.disabled = false;
+        submitBtn.textContent = langKey === 'ar' ? 'اطلب معاينة مجانية' : 'Request Free Visit';
+      }
+      if(successPanel){
+        successPanel.hidden = false;
+        // Make the panel read like a person wrote it for this visitor: greet them by name, and
+        // say back what they asked for so they can see their request was taken seriously.
+        const firstName = sentName.trim().split(/\s+/)[0];
+        const greeting = qs('#lead-form-success h3');
+        if(greeting){
+          greeting.textContent = firstName
+            ? (langKey === 'ar' ? `أهلاً يا ${firstName}، طلبك وصل! 🎉` : `Got it, ${firstName}. Thank you! 🎉`)
+            : (langKey === 'ar' ? 'طلبك وصلنا. شكراً! 🎉' : 'Your request came through. Thank you! 🎉');
+        }
+        // Only show the extra line when there is something real to say.
+        const summary = qs('#lead-form-summary');
+        if(summary){
+          const need = sentNeeds.trim().replace(/\s+/g, ' ');
+          if(need){
+            const short = need.length > 90 ? need.slice(0, 90).trim() + '...' : need;
+            summary.textContent = langKey === 'ar' ? 'محتاج: ' + short : 'You asked for: ' + short;
+            summary.hidden = false;
+          } else {
+            summary.textContent = '';
+            summary.hidden = true;
+          }
+        }
+      }
     }, 900);
   });
 }
