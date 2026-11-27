@@ -54,21 +54,13 @@ const copy = {
       security: {
         title:'Security setup',
         devices:['Smart cameras','Smart lock','Motion sensors','Door/window sensors'],
-<<<<<<< Updated upstream
         estimate:'Custom quote after the free visit. A starter security setup usually begins around 8,500 EGP, depending on the devices and the wiring.',
-=======
-        estimate:'Custom quote after the free visit. Typical starter security setups begin custom quote depending on devices and wiring.',
->>>>>>> Stashed changes
         checks:'Camera angles, entrance points, Wi-Fi strength, storage needs, family access.'
       },
       lighting: {
         title:'Smart lighting',
         devices:['Smart switches','Dimmable bulbs','Scene control','Motion-triggered lighting'],
-<<<<<<< Updated upstream
         estimate:'Custom quote after the free visit. Lighting automation usually starts around 4,500 EGP, depending on how many rooms you want to cover.',
-=======
-        estimate:'Custom quote after the free visit. Starter lighting automation can begin custom quote depending on room count.',
->>>>>>> Stashed changes
         checks:'Switch type, neutral wire availability, room scenes, app/voice control needs.'
       },
       comfort: {
@@ -397,7 +389,6 @@ if(leadForm){
     // Let the browser submit the native form into the hidden iframe.
     // This is the most reliable way to post to Google Forms from a custom-styled page.
     setTimeout(() => {
-<<<<<<< Updated upstream
       // Clear the live form right away so nobody sends the same request twice by accident,
       // and put the button back the way it was in case the visitor scrolls back down to it.
       leadForm.reset();
@@ -430,10 +421,6 @@ if(leadForm){
           }
         }
       }
-=======
-      leadForm.hidden = true;
-      if(successPanel) successPanel.hidden = false;
->>>>>>> Stashed changes
     }, 900);
   });
 }
